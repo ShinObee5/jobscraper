@@ -19,7 +19,7 @@ soup = BeautifulSoup(page.text,'html.parser')
 def extract_job_title_from_result(soup): 
     jobs_list = []
     cname_list = []
-    sal = []
+    sal_list = []
     loc_list = []
     jsumm = []
     results = []
@@ -33,15 +33,23 @@ def extract_job_title_from_result(soup):
             loc = div.find('div',class_="companyLocation").get_text()
             cname_list.append(cname)
             loc_list.append(loc)
+        for div in e.findAll('div',class_= "salary-snippet-container"):
+            if(div.get_text()):
+                sal=div.get_text()
+            else:
+                sal=0
+        sal_list.append(sal)
         #results.append(e)
 
         
-    print(jobs_list)
-    print(cname_list)
-    print(loc_list)
-    dict = {'jtitle': jobs_list, 'company': cname_list,'location':loc_list}
-    df=pd.DataFrame(dict)
+    #print(jobs_list)
+    #print(cname_list)
+    #print(loc_list)
+    print(sal_list)
+    dict = {'Jobtitle': jobs_list, 'company': cname_list,'location':loc_list,'salary':sal_list}
+    d=pd.DataFrame(dict)
+    return(d)
   
    
-extract_job_title_from_result(soup)
+df=extract_job_title_from_result(soup)
 
