@@ -4,7 +4,6 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import time
 
-from tabulate import tabulate
 
 URL = "https://in.indeed.com/jobs?q=Job%20Portal&start=10&vjk=e9f2a2b350096e8f&advn=5777929391423421"
 #conducting a request of the stated URL above:
@@ -23,6 +22,7 @@ def extract_job_title_from_result(soup):
     loc_list = []
     jsumm = []
     results = []
+    i=0
     
     resultslist = soup.find('ul',class_="jobsearch-ResultsList css-0")
     for e in resultslist.findAll('li'):
@@ -33,12 +33,13 @@ def extract_job_title_from_result(soup):
             loc = div.find('div',class_="companyLocation").get_text()
             cname_list.append(cname)
             loc_list.append(loc)
+            sal_list.append(0)
+        print(sal_list)
+
         for div in e.findAll('div',class_= "salary-snippet-container"):
-            if(div.get_text()):
-                sal=div.get_text()
-            else:
-                sal=0
-        sal_list.append(sal)
+            sal=div.get_text()
+            sal_list[i]=sal
+            i+=1
         #results.append(e)
 
         
@@ -46,7 +47,7 @@ def extract_job_title_from_result(soup):
     #print(cname_list)
     #print(loc_list)
     print(sal_list)
-    dict = {'Jobtitle': jobs_list, 'company': cname_list,'location':loc_list,'salary':sal_list}
+    dict = {'Job title': jobs_list, 'Company name': cname_list,'Location':loc_list,'Salary':sal_list}
     d=pd.DataFrame(dict)
     return(d)
   
