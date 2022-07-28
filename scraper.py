@@ -34,19 +34,14 @@ def extract_job_title_from_result(soup):
             cname_list.append(cname)
             loc_list.append(loc)
             sal_list.append(0)
-        print(sal_list)
 
         for div in e.findAll('div',class_= "salary-snippet-container"):
             sal=div.get_text()
             sal_list[i]=sal
             i+=1
-        #results.append(e)
 
         
-    #print(jobs_list)
-    #print(cname_list)
-    #print(loc_list)
-    print(sal_list)
+    
     dict = {'Job title': jobs_list, 'Company name': cname_list,'Location':loc_list,'Salary':sal_list}
     d=pd.DataFrame(dict)
     return(d)
