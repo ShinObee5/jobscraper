@@ -16,11 +16,12 @@ jobs_list = []
 cname_list = []
 sal_list = []
 loc_list = []
-jsumm = []
-results = []          
-def extract_job_title_from_result(soup): 
+results = []    
+j=0
+      
+def extract_job_info_from_result(soup,j):
+    i=j
 
-    i=0
     
     resultslist = soup.find('ul',class_="jobsearch-ResultsList css-0")
     for e in resultslist.findAll('li'):
@@ -37,7 +38,7 @@ def extract_job_title_from_result(soup):
             sal=div.get_text()
             sal_list[i]=sal
             i+=1
-        
+    j=i        
     
    
   
@@ -57,15 +58,16 @@ def next_page():
         # create soup for next url
         nextsoup = BeautifulSoup(nextpage.content, 'html.parser')
         
-        extract_job_title_from_result(nextsoup)
+        extract_job_info_from_result(nextsoup,j)
         
         
         
    
-extract_job_title_from_result(soup)
+extract_job_info_from_result(soup,j)
 next_page()
 
 dict = {'Job title': jobs_list, 'Company name': cname_list,'Location':loc_list,'Salary':sal_list}
 df=pd.DataFrame(dict)
 
 print(df)
+df.to_csv('file1.csv')
