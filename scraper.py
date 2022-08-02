@@ -14,7 +14,20 @@ soup = BeautifulSoup(page.text,'html.parser')
 #print(soup.prettify())
 
 
- 
+def next_page():
+    for i in soup.find_all('a', href = True):
+        
+      # check all link which  contains /jobs?q=Job+Portal&start
+      
+      if("/jobs?q=Job+Portal&start" in i['href']):
+    
+          
+        # call get method to request next url
+        nextpage = requests.get("http://in.indeed.com"+i['href'])
+          
+        # create soup for next url
+        nextsoup = BeautifulSoup(nextpage.content, 'html.parser')
+          
 def extract_job_title_from_result(soup): 
     jobs_list = []
     cname_list = []
