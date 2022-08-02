@@ -5,28 +5,12 @@ import pandas as pd
 import time
 
 
-URL = "https://in.indeed.com/jobs?q=Job%20Portal&start=10&vjk=e9f2a2b350096e8f&advn=5777929391423421"
+URL = "https://in.indeed.com/jobs?q=Job%20Portal&start=40&vjk=b4a17c048930a42a"
 #conducting a request of the stated URL above:
 page = requests.get(URL)
 #specifying a desired format of “page” using the html parser - this allows python to read the various components of the page, rather than treating it as one long string.
 soup = BeautifulSoup(page.text,'html.parser')
-#printing soup in a more structured tree format that makes for easier reading
-#print(soup.prettify())
 
-
-def next_page():
-    for i in soup.find_all('a', href = True):
-        
-      # check all link which  contains /jobs?q=Job+Portal&start
-      
-      if("/jobs?q=Job+Portal&start" in i['href']):
-    
-          
-        # call get method to request next url
-        nextpage = requests.get("http://in.indeed.com"+i['href'])
-          
-        # create soup for next url
-        nextsoup = BeautifulSoup(nextpage.content, 'html.parser')
           
 def extract_job_title_from_result(soup): 
     jobs_list = []
@@ -52,13 +36,33 @@ def extract_job_title_from_result(soup):
             sal=div.get_text()
             sal_list[i]=sal
             i+=1
-
         
     
     dict = {'Job title': jobs_list, 'Company name': cname_list,'Location':loc_list,'Salary':sal_list}
     d=pd.DataFrame(dict)
     return(d)
   
+
+
+def next_page():
+    for i in soup.find_all('a', href = True):
+        
+      # check all link which  contains /jobs?q=Job+Portal&start
+      
+      if("/jobs?q=Job+Portal&start" in i['href']):
+    
+          
+        # call get method to request next url
+        nextpage = requests.get("http://in.indeed.com"+i['href'])
+          
+        # create soup for next url
+        nextsoup = BeautifulSoup(nextpage.content, 'html.parser')
+        
+        print(extract_job_title_from_result(nextsoup))
+        
+        
+        
    
 df=extract_job_title_from_result(soup)
+next_page()
 
