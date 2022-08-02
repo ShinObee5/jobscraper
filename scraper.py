@@ -11,14 +11,15 @@ page = requests.get(URL)
 #specifying a desired format of “page” using the html parser - this allows python to read the various components of the page, rather than treating it as one long string.
 soup = BeautifulSoup(page.text,'html.parser')
 
-          
+
+jobs_list = []
+cname_list = []
+sal_list = []
+loc_list = []
+jsumm = []
+results = []          
 def extract_job_title_from_result(soup): 
-    jobs_list = []
-    cname_list = []
-    sal_list = []
-    loc_list = []
-    jsumm = []
-    results = []
+
     i=0
     
     resultslist = soup.find('ul',class_="jobsearch-ResultsList css-0")
@@ -38,9 +39,7 @@ def extract_job_title_from_result(soup):
             i+=1
         
     
-    dict = {'Job title': jobs_list, 'Company name': cname_list,'Location':loc_list,'Salary':sal_list}
-    d=pd.DataFrame(dict)
-    return(d)
+   
   
 
 
@@ -58,11 +57,15 @@ def next_page():
         # create soup for next url
         nextsoup = BeautifulSoup(nextpage.content, 'html.parser')
         
-        print(extract_job_title_from_result(nextsoup))
+        extract_job_title_from_result(nextsoup)
         
         
         
    
-df=extract_job_title_from_result(soup)
+extract_job_title_from_result(soup)
 next_page()
 
+dict = {'Job title': jobs_list, 'Company name': cname_list,'Location':loc_list,'Salary':sal_list}
+df=pd.DataFrame(dict)
+
+print(df)
